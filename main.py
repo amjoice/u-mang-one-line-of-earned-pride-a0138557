@@ -20,18 +20,24 @@ LINE = (
 )
 
 
+def validate(text):
+    """Check the entry the way the gate checks it: 1-240 chars, one line."""
+    assert 1 <= len(text) <= 240, f"entry length {len(text)} out of range"
+    assert text.strip(), "entry is only whitespace"
+    assert "\n" not in text, "entry must be a single line"
+    assert text == text.strip(), "entry must not start or end with whitespace"
+
+
 def main():
     out_dir = os.environ.get("OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8") as f:
         f.write(LINE)
-    # Verify what was written, the same way the gate checks it.
+    # Read it back and verify what was written, the same way the gate does.
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
-    assert 1 <= len(text) <= 240, f"entry length {len(text)} out of range"
-    assert text.strip(), "entry is only whitespace"
-    assert "\n" not in text, "entry must be a single line"
+    validate(text)
     print(f"Wrote {len(text)} chars to {path}")
 
 
